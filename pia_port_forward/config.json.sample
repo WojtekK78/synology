@@ -1,4 +1,10 @@
 {
-    "user": "pia_username",
-    "password": "pia_password"
+  "user": "PIA_user",
+  "password": "PIA_pass",
+  "deluge": {
+    "host": "deluge_host:port",
+    "username": "deluge_username",
+    "password": "deluge_pass",
+    "port_test_delay": 5
+  }
 }
