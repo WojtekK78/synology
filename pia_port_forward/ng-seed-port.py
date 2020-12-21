@@ -8,11 +8,11 @@ import time  # sleep after port assign before testing it
 from datetime import datetime, timedelta  # reading/writing expiration dates
 import logging as log
 
-import debugpy
+#import debugpy
 # Allow other computers to attach to debugpy at this IP address and port.
-debugpy.listen(('192.168.0.3', 5678))
+#debugpy.listen(('192.168.0.3', 5678))
 # Pause the program until a remote debugger is attached
-debugpy.wait_for_client()
+#debugpy.wait_for_client()
 
 '''
   See README..md
