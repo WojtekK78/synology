@@ -87,7 +87,7 @@ class PIAMeta:
         self.local = os.popen('ip route | head -1 | grep tun | awk \'{ print $3 }\'').read().strip()
         if self.local is None or self.local == '':
             _error('It does not look like you are connected to PIA!')
-        
+                
         self.find_token()
         self.find_port()
         success = self.bind_port()
