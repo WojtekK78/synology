@@ -7,6 +7,7 @@ import sys  # reading args
 import time  # sleep after port assign before testing it
 from datetime import datetime, timedelta  # reading/writing expiration dates
 import logging as log
+import subprocess
 
 '''
   See README..md
@@ -199,12 +200,41 @@ class TransmissionConsumer(PortChangeConsumer):
             _error(result)
         log.info('Port bound successfully')
 
+class DelugeConsumer(PortChangeConsumer):
+    cfg:dict = None
+
+    def __init__(self):
+        self.cfg = config['deluge']
+        if 'port_test_delay' not in self.cfg:
+            self.cfg['port_test_delay'] = 5
+
+    def consume(self) -> None:
+        self.update_seed_port()
+        #self.test_seed_port()
+
+    def update_seed_port(self):
+        log.info('Updating deluge to use port: {}'.format(config['port']))
+        cmd = 'deluge-console "connect {host} {user} {password}; config --set listen_ports ({port},{port})"'.format(
+            host=self.cfg['host'], user=self.cfg['username'], password=self.cfg['password'], port=config['port']
+        )
+        log.debug(cmd)
+        result = os.popen(cmd).read()
+        #p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+        #(output, err) = p.communicate()  
+        #This makes the wait possible
+        #p_status = p.wait()
+        #log.debug(output)
+        # (TODO) WOJTEK -> how to check if command executed succesfully ?
+        #if '"successfully"' not in str(result):
+        #    _error(result)
+        log.info('Port bound updated')
 
 def get_consumers() -> list:
     consumers = []
     if 'transmission' in config:
         consumers.append(TransmissionConsumer())
-    
+    if 'deluge' in config:
+        consumers.append(DelugeConsumer())
     return filter(lambda consumer: issubclass(consumer.__class__, PortChangeConsumer), consumers)
 
 def main():
